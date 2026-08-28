@@ -381,6 +381,7 @@ function dhanokaRevertToEnglish() {
 }
 
 const DHANOKA_LANG_KEY = "dhanoka_lang";
+const DHANOKA_DEFAULT_LANG = "hi"; // Site opens in Hindi by default for first-time visitors
 
 function dhanokaApplyLanguage(lang) {
   document.documentElement.lang = lang === "hi" ? "hi" : "en";
@@ -408,13 +409,15 @@ function dhanokaInitLangToggle() {
   const toggles = document.querySelectorAll("[data-lang-toggle]");
   toggles.forEach((btn) => {
     btn.addEventListener("click", () => {
-      const current = (localStorage.getItem(DHANOKA_LANG_KEY) || "en");
+      const current = (localStorage.getItem(DHANOKA_LANG_KEY) || DHANOKA_DEFAULT_LANG);
       dhanokaSetLanguage(current === "hi" ? "en" : "hi");
     });
   });
 
-  let lang = "en";
-  try { lang = localStorage.getItem(DHANOKA_LANG_KEY) || "en"; } catch (e) {}
+  // Site defaults to Hindi for first-time visitors. Once someone picks a
+  // language, that explicit choice (stored in localStorage) always wins.
+  let lang = DHANOKA_DEFAULT_LANG;
+  try { lang = localStorage.getItem(DHANOKA_LANG_KEY) || DHANOKA_DEFAULT_LANG; } catch (e) {}
   dhanokaApplyLanguage(lang);
 
   if (lang === "hi") {
